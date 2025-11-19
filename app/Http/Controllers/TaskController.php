@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\Project;
+use App\Events\TaskCreated;
+use App\Events\TaskUpdated;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+
 
 class TaskController extends Controller
 {
@@ -53,6 +56,8 @@ class TaskController extends Controller
             'due_date' => $request->due_date,
         ]);
 
+        TaskCreated::dispatch($task);
+
         return response()->json($task, 201);
     }
 
@@ -86,6 +91,9 @@ class TaskController extends Controller
         }
         
         $task->update($request->all());
+
+        TaskUpdated::dispatch($task);
+
         return response()->json($task, 200);
     }
 

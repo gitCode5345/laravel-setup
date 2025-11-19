@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Events\CommentCreated;
 
 class CommentController extends Controller
 {
@@ -37,6 +38,8 @@ class CommentController extends Controller
             'author_id' => $request->user()->id
         ]);
         
+        CommentCreated::dispatch($comment);
+
         return response()->json($comment->load('user'), 201);
     }
 
