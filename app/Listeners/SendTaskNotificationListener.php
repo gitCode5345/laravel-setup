@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\TaskCreated;
+use App\Jobs\SendTaskCreatedNotification;
 use App\Jobs\SendTelegramMessageJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -18,6 +19,7 @@ class SendTaskNotificationListener
                    "<b>Priority:</b> {$task->priority}\n" .
                    "<b>Status:</b> {$task->status}";
 
+        SendTaskCreatedNotification::dispatch($task);
         SendTelegramMessageJob::dispatch($message);
     }
 }
